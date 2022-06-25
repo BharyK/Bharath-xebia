@@ -1,0 +1,38 @@
+{  
+    "employee": 
+   [
+    {  
+        "name":       "Gowthami",   
+        "salary":      56000,   
+        "married":    true ,
+        "ID": 1
+    },
+
+    {  
+        "name":       "Keerthi",   
+        "salary":      56000,   
+        "married":    true ,
+        "ID": 1
+    },
+
+    {  
+        "name":       "Avinash",   
+        "salary":      56000,   
+        "married":    true ,
+        "ID": 1
+    },
+    {  
+        "name":       "Bharath",   
+        "salary":      56000,   
+        "married":    true ,
+        "ID": 1
+    },
+    {  
+        "name":       "Suraya",   
+        "salary":      56000,   
+        "married":    true ,
+        "ID": 1
+    }
+    
+]
+}  

@@ -1,0 +1,2 @@
+export const SIGN_IN_REQEUST = 'SIGN_IN_REQEUST';
+export const SIGN_IN_SUCCESS = 'SIGN_IN_SUCCESS';

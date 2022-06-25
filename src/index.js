@@ -1,12 +1,40 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter as Router } from 'react-router-dom';
+import RoutesComponent from './Routes';
+import { createBrowserHistory } from 'history';
+import { routerReducer } from 'react-router-redux';
+import { Provider } from 'react-redux';
+import { fork } from 'redux-saga/effects';
+//import { reducer as formReducer } from 'redux-form';
+import createStore from './store';
+
+//TODO:: Import Reduces
+import authReducer from './reducers/Auth';
+
+//TODO:: Import Sagas
+import authSagas from './sagas/Auth'
+
+const reducer = {
+  auth: authReducer
+};
+
+const sagas = [
+  fork(authSagas)
+]
+
+
+const browserHistory = createBrowserHistory();
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={createStore(reducer, sagas, browserHistory)}>
+      <Router history={browserHistory}>
+        <App location={browserHistory.location} Routes={RoutesComponent} />
+      </Router>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
