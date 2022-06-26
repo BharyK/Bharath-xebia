@@ -98,10 +98,9 @@ function SignIn({isAuthenticated, setAuthStatus}) {
             </Grid>
           </Box>
         </Box>
-        <h4>Admin Portal: userName: Admin, password: 123</h4>
-        <h4>Employee Portal: userName: Xebia, password: 123</h4>
       </Container>
-      
+      <h4>Admin: userName: Admin, password: 123</h4>
+      <h4>Employee: userName: Xebia, password: 123</h4>
     </ThemeProvider>
   );
 }
