@@ -19,10 +19,11 @@ import { connect } from 'react-redux';
 import { employeeListRequest, employeeDeleteRequest, addNewEmpployeeRequest } from '../../actions/EmployeeData';
 import { setAuthStatus } from '../../actions/Auth';
 
-function AdminView({ isAuthenticated, employeeListRequest, getList, employeeDeleteRequest, setAuthStatus }) {
+function AdminView({ addNewEmpployeeRequest, isAuthenticated, employeeListRequest, getList, employeeDeleteRequest, setAuthStatus }) {
     const [modalOpen, setModalOpen] = useState(false);
     const [modalHeaderValue, setModalHeaderValue] = useState()
     const [deleteEmployee, setDeleteEmployee] = useState()
+    const [employeeEditInfo, setEmployeeEditInfo] = useState()
     function createData(name, calories, fat, carbs, protein) {
         return { name, calories, fat, carbs, protein };
     }
@@ -51,20 +52,7 @@ function AdminView({ isAuthenticated, employeeListRequest, getList, employeeDele
         setDeleteEmployee(emmployeeId)
         setModalOpen(true)
         setModalHeaderValue(value);
-        const res = new Promise((resolve, reject) =>
-            addNewEmpployeeRequest({
-                employeeName: "Bharath",
-                performance: "Good",
-                feedback: "10 out 4",
-                description: "need to do impove in code level"
-            },{ reject, resolve })
-        );
-        res.then(() => {
-            setModalOpen(false)
-        });
-        res.catch(() => {
-            console.log("getList", getList)
-        });
+       
     }
     const handleModalClose = () => {
         setModalOpen(false)
@@ -87,6 +75,24 @@ function AdminView({ isAuthenticated, employeeListRequest, getList, employeeDele
         history("/");
     }
 
+    const handleAddEmpolyee = (value) => {
+        console.log ( value)
+        const res = new Promise((resolve, reject) =>
+        addNewEmpployeeRequest({
+            employeeName: "Bharath",
+            salary: "25365",
+            age: "3",
+            description: "need to do impove in code level"
+        },{ reject, resolve })
+    );
+    res.then(() => {
+        setModalOpen(false)
+    });
+    res.catch(() => {
+        setModalOpen(false)
+    });
+    }
+
     return (
         <div className="container" 
         style = {{width: "70%", margin: "auto"}}
@@ -98,6 +104,7 @@ function AdminView({ isAuthenticated, employeeListRequest, getList, employeeDele
                     modalShow={modalOpen}
                     handleModalClose={handleModalClose}
                     handleDeleteEmployee={handleDeleteEmployee}
+                    handleAddEmpolyee= {handleAddEmpolyee}
                 />
             }
             <Grid container spacing={2}>

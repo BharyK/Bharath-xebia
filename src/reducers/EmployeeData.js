@@ -1,7 +1,8 @@
 import * as constants from '../constants/EmployeeData';
 
 const initialState = {
-    employeeList:[]
+    employeeList:[],
+    newEmployeeList: []
 }
 
 const reducer = (state = initialState, action) => {
@@ -13,6 +14,15 @@ const reducer = (state = initialState, action) => {
                 employeeList: action.payload.data.data
             };
         }
+
+        case constants.ADD_NEW_EMPLOYEE_REQUEST_SUCCESS: {
+            console.log ("validation",action.payload)
+            return {
+                ...state,
+                newEmployeeList: action.payload
+            };
+        }
+
 
         default: {
             return state;

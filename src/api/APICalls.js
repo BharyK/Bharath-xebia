@@ -11,8 +11,8 @@ export async function getRequest(path, params) {
   return res;
 }
 
-export async function postRequest(path, body) {
-  const res = await axios.post(API_BASE + path, body, { headers });
+export async function postRequest(path, params) {
+  const res = await axios.post(API_BASE + path, { headers, params });
   return res;
 }
 
