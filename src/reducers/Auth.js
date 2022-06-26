@@ -1,17 +1,17 @@
 import * as constants from '../constants/Auth';
 
 const initialState = {
-    isAuthenticated: "Bharath",
+    isAuthenticated: false,
     customerInfo: {}
 }
 
 const reducer = (state = initialState, actions) => {
     switch (actions.type) {
-        case constants.SIGN_IN_SUCCESS: {
+        case constants.SET_AUTH_STATUS: {
+            console.log ("Bharrath", actions)
             return {
                 ...state,
-                customerInfo: actions.payload.data,
-                isAuthenticated: true
+                isAuthenticated: actions.payload.isAuthenticated,
             };
         }
 

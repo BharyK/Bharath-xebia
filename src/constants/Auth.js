@@ -1,2 +1,1 @@
-export const SIGN_IN_REQEUST = 'SIGN_IN_REQEUST';
-export const SIGN_IN_SUCCESS = 'SIGN_IN_SUCCESS';
+export const SET_AUTH_STATUS = 'SET_AUTH_STATUS';

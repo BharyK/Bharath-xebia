@@ -20,3 +20,14 @@ export const employeeDeleteRequestSucess = ( payload) => ({
     payload,
     type: constants.EMPLOYEE_LIST_DELETE_REQUEST_SUCCESS,
 });
+
+export const addNewEmpployeeRequest = (payload, meta) => ({
+    payload,
+    meta,
+    type: constants.ADD_NEW_EMPLOYEE_REQUEST,
+})
+
+export const addNewEmpployeeRequestSuccess = ( payload) => ({
+    payload,
+    type: constants.ADD_NEW_EMPLOYEE_REQUEST_SUCCESS,
+});

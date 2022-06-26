@@ -18,7 +18,7 @@ const style = {
     p: 4,
 };
 
-export default function BasicModal({ handleModalClose, modalShow, modalText }) {
+export default function BasicModal({ deleteEmployeeId, handleDeleteEmployee, handleModalClose, modalShow, modalText }) {
     return (
         <div>
             <Modal
@@ -36,7 +36,9 @@ export default function BasicModal({ handleModalClose, modalShow, modalText }) {
                             <h4>Are you sure you want delete the employee</h4>
                             <Grid container style={{ margin: "auto", width: "50%" }}>
                                 <Grid item xs={4} style={{ marginRight: 40 }}>
-                                    <Button variant="contained">{modalText}</Button>
+                                    <Button variant="contained"
+                                    onClick = {() => handleDeleteEmployee(deleteEmployeeId)}
+                                    >{modalText}</Button>
                                 </Grid>
                                 <Grid item xs={4}>
                                     <Button variant="outlined" color="error"

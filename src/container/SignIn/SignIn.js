@@ -12,30 +12,29 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useNavigate } from "react-router-dom";
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import { setAuthStatus } from '../../actions/Auth';
+import { connect } from 'react-redux';
 
 const theme = createTheme();
 
-export default function SignIn() {
+
+function SignIn({isAuthenticated, setAuthStatus}) {
+  const history = useNavigate();
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    console.log (data.get('email'),data.get('password') )
+    if (data.get('email') === "Admin" && data.get('password') === "123") {
+      setAuthStatus ({payload: {isAuthenticated: true}});
+      history("/adminView");
+    }
+
+    if (data.get('email') === "Xebia" && data.get('password') === "123") {
+      setAuthStatus ({payload: {isAuthenticated: true}});
+      history("/employeeViewPage");
+    }
   };
 
   return (
@@ -53,7 +52,7 @@ export default function SignIn() {
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h5" disabled>
             Sign in
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
@@ -77,10 +76,6 @@ export default function SignIn() {
               id="password"
               autoComplete="current-password"
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
             <Button
               type="submit"
               fullWidth
@@ -103,8 +98,17 @@ export default function SignIn() {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
   );
 }
+
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated,
+});
+
+const mapDispatchToProps = {
+  setAuthStatus
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn);

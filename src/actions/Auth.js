@@ -1,13 +1,6 @@
 import * as constants from '../constants/Auth';
 
-export const authProviderRequest = (payload, meta) => ({
-    meta,
+export const setAuthStatus = ({payload}) => ({
     payload,
-    type: constants.SIGN_IN_REQEUST,
+    type: constants.SET_AUTH_STATUS,
 })
-
-export const authSuccess = (payload, meta) => ({
-    meta,
-    payload,
-    type: constants.SIGN_IN_SUCCESS,
-});

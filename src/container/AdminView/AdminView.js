@@ -12,20 +12,25 @@ import UpdateIcon from '@mui/icons-material/Update';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Modal from '../../components/Modal/Modal';
+import { useNavigate } from "react-router-dom";
 
 //connect to the redux store
 import { connect } from 'react-redux';
-import { employeeListRequest, employeeDeleteRequest } from '../../actions/EmployeeData';
+import { employeeListRequest, employeeDeleteRequest, addNewEmpployeeRequest } from '../../actions/EmployeeData';
+import { setAuthStatus } from '../../actions/Auth';
 
-function AdminView({ employeeListRequest, getList, employeeDeleteRequest }) {
+function AdminView({ isAuthenticated, employeeListRequest, getList, employeeDeleteRequest, setAuthStatus }) {
     const [modalOpen, setModalOpen] = useState(false);
     const [modalHeaderValue, setModalHeaderValue] = useState()
+    const [deleteEmployee, setDeleteEmployee] = useState()
     function createData(name, calories, fat, carbs, protein) {
         return { name, calories, fat, carbs, protein };
     }
+    const history = useNavigate();
 
     useEffect(() => {
-        const res = new Promise((resolve, reject) =>
+        if(isAuthenticated){
+            const res = new Promise((resolve, reject) =>
             employeeListRequest({ reject, resolve })
         );
         res.then(() => {
@@ -34,42 +39,65 @@ function AdminView({ employeeListRequest, getList, employeeDeleteRequest }) {
         res.catch(() => {
             console.log("getList", getList)
         });
-    }, [])
+        }else {
+            history ('/') 
+        }
+           
+        
+       
+    }, [getList])
 
-    const rows = [
-        createData('Bharath', 159, 6.0, 24, 4.0),
-        createData('Kumar', 237, 9.0, 37, 4.3),
-        createData('Keerthi', 262, 16.0, 24, 6.0),
-        createData('Jagadish', 305, 3.7, 67, 4.3),
-        createData('Preethi', 356, 16.0, 49, 3.9),
-    ];
-
-    const handleActionChange = (value) => {
+    const handleActionChange = (value, emmployeeId) => {
+        setDeleteEmployee(emmployeeId)
         setModalOpen(true)
-        setModalHeaderValue(value)
+        setModalHeaderValue(value);
+        const res = new Promise((resolve, reject) =>
+            addNewEmpployeeRequest({
+                employeeName: "Bharath",
+                performance: "Good",
+                feedback: "10 out 4",
+                description: "need to do impove in code level"
+            },{ reject, resolve })
+        );
+        res.then(() => {
+            setModalOpen(false)
+        });
+        res.catch(() => {
+            console.log("getList", getList)
+        });
     }
     const handleModalClose = () => {
         setModalOpen(false)
     }
-    const handleDeleteEmployee = () => {
+
+    const handleDeleteEmployee = (id) => {
         const res = new Promise((resolve, reject) =>
-            employeeDeleteRequest({ reject, resolve })
+            employeeDeleteRequest(id, { reject, resolve })
         );
         res.then(() => {
-            console.log("getList", getList)
+            setModalOpen(false)
         });
         res.catch(() => {
             console.log("getList", getList)
         });
     }
 
-    console.log("getList", getList.length > 0)
+    const handleLogOut = () => {
+        setAuthStatus ({payload: {isAuthenticated: false}});
+        history("/");
+    }
+
     return (
-        <div className="container">
+        <div className="container" 
+        style = {{width: "70%", margin: "auto"}}
+        >
             {modalOpen &&
-                <Modal modalText={modalHeaderValue}
+                <Modal
+                    deleteEmployeeId={deleteEmployee}
+                    modalText={modalHeaderValue}
                     modalShow={modalOpen}
                     handleModalClose={handleModalClose}
+                    handleDeleteEmployee={handleDeleteEmployee}
                 />
             }
             <Grid container spacing={2}>
@@ -79,29 +107,34 @@ function AdminView({ employeeListRequest, getList, employeeDeleteRequest }) {
                 <Grid item xs={4}>
                     <Button variant="contained"
                         onClick={() => handleActionChange("Add")}
+                        style = {{marginTop: 20}}
                     >Add New Employee</Button>
                 </Grid>
                 <Grid item xs={4}>
                     <Button variant="contained"
                         style={{
-                            backgroundColor: "#21b6ae",
+                            backgroundColor: "#21b6ae",marginTop: 20
                         }}
+                        onClick = {() => handleLogOut()}
                     >Logout</Button>
                 </Grid>
             </Grid>
             <TableContainer component={Paper} width="50%">
                 <Table sx={{ minWidth: 250 }} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell align="center">Employee Name</TableCell>
-                            <TableCell align="center">Employee ID</TableCell>
-                            <TableCell align="center">Employee Salary</TableCell>
-                            <TableCell align="center">Employee Age</TableCell>
-                            <TableCell align="center">Action</TableCell>
-                        </TableRow>
-                    </TableHead>
+                    {getList.length <= 0 ? <h4 style={{ textAlign: "center" }}>Too Many Attempts.
+                    </h4> :
+                        <TableHead>
+                            <TableRow>
+                                <TableCell align="center">Employee Name</TableCell>
+                                <TableCell align="center">Employee ID</TableCell>
+                                <TableCell align="center">Employee Salary</TableCell>
+                                <TableCell align="center">Employee Age</TableCell>
+                                <TableCell align="center">Action</TableCell>
+                            </TableRow>
+                        </TableHead>
+                    }
                     <TableBody>
-                        {getList.length < 0 ? <h2>Too Many Attempts.</h2> :
+                        {getList.length <= 0 ? null :
                             getList.map((employee) => (
                                 <TableRow
                                     key={employee.name}
@@ -112,32 +145,13 @@ function AdminView({ employeeListRequest, getList, employeeDeleteRequest }) {
                                     <TableCell align="center">{employee.employee_salary}</TableCell>
                                     <TableCell align="center">{employee.employee_age}</TableCell>
                                     <TableCell align="center" style={{ cursor: "pointer" }}>
-                                        <UpdateIcon title="update" onClick={() => handleActionChange("Update")} />
-                                        <EditIcon title="Edit" onClick={() => handleActionChange("Edit")} />
-                                        <DeleteIcon title="Delete" onClick={() => handleActionChange("Delete")} />
+                                        {/* <UpdateIcon title="update" onClick={() => handleActionChange("Update")} /> */}
+                                        <EditIcon title="Edit" onClick={() => handleActionChange("Edit", employee)} />
+                                        <DeleteIcon title="Delete" onClick={() => handleActionChange("Delete", employee.id)} />
                                     </TableCell>
                                 </TableRow>
                             ))
                         }
-                        {/* {rows.map((row) => (
-                            <TableRow
-                                key={row.name}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell component="th" scope="row">
-                                    {row.name}
-                                </TableCell>
-                                <TableCell align="center">{row.calories}</TableCell>
-                                <TableCell align="center">{row.fat}</TableCell>
-                                <TableCell align="center">{row.carbs}</TableCell>
-                                <TableCell align="center">Just Description</TableCell>
-                                <TableCell align="center" style={{ cursor: "pointer" }}>
-                                    <UpdateIcon title="update" onClick={() => handleActionChange("Update")} />
-                                    <EditIcon title="Edit" onClick={() => handleActionChange("Edit")} />
-                                    <DeleteIcon title="Delete" onClick={() => handleActionChange("Delete")} />
-                                </TableCell>
-                            </TableRow>
-                        ))} */}
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -147,11 +161,14 @@ function AdminView({ employeeListRequest, getList, employeeDeleteRequest }) {
 
 const mapStateToProps = state => ({
     getList: state.employee.employeeList,
+    isAuthenticated: state.auth.isAuthenticated,
 });
 
 const mapDispatchToProps = {
     employeeListRequest,
-    employeeDeleteRequest
+    employeeDeleteRequest,
+    addNewEmpployeeRequest,
+    setAuthStatus
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminView);
+export default connect(mapStateToProps, mapDispatchToProps)(React.memo(AdminView));

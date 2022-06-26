@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -10,55 +10,88 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import EmployeeFeedbackFrom from '../../components/FeedbackForm/FeedbackForm';
 
-export default function EmployeeView() {
+import { setAuthStatus } from '../../actions/Auth';
+import { connect } from 'react-redux';
+import { useNavigate } from "react-router-dom";
+import { withStyles } from "@material-ui/core/styles";
+
+const styles = theme => ({
+    root: {
+      width: "50%",
+      margin: "auto",
+      zIndex: 1
+    },
+    pageHeader: {
+        display: "flex",
+        justifyContent: "spacearound",
+        alignItem: "center",
+        alignSelf: "center",
+        width:"100%"
+    }
+  });
+
+function EmployeeView(props, { isAuthenticated }) {
+    const [employeeDescription, setEmployeeDescription] = useState()
+    const [employeeList, setEmployeeList] = useState(
+        [
+            {
+                description: "Changes has been done"
+            }
+        ]
+    )
     function createData(name, calories, fat, carbs, protein) {
         return { name, calories, fat, carbs, protein };
     }
+    const history = useNavigate();
 
-    const rows = [
-        createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-        createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-        createData('Eclair', 262, 16.0, 24, 6.0),
-        createData('Cupcake', 305, 3.7, 67, 4.3),
-        createData('Gingerbread', 356, 16.0, 49, 3.9),
-    ];
-
+    const handleLogOut = () => {
+        setAuthStatus({ payload: { isAuthenticated: false } });
+        history("/");
+    }
+    const handleEmployeeDes = (value) => {
+        setEmployeeDescription(value)
+        setEmployeeList(prevState => [...prevState, { description: value }]);
+    }
+    let newDate = new Date().toLocaleDateString();
+    const { classes } = props;
     return (
-        <div className="container">
+        <div className={classes.root}>
             <Grid container spacing={2}>
                 <Grid item xs={8}>
-                <h1>Employee Portal</h1>
+                    <h1>Employee Portal</h1>
                 </Grid>
-                <Grid item xs={4}>
-                    <Button>Log Out</Button>
+                <Grid item xs={4} style = {{marginTop: 20}}>
+                    <Button variant="contained"
+                        style={{
+                            backgroundColor: "#21b6ae",
+                        }}
+                        onClick={() => handleLogOut()}>Log Out</Button>
                 </Grid>
-               
+
             </Grid>
-            <EmployeeFeedbackFrom />
+            <EmployeeFeedbackFrom handleEmployeeDes={handleEmployeeDes} />
             <TableContainer component={Paper} width="50%">
                 <Table sx={{ minWidth: 250 }} aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell>Performace Review</TableCell>
-                            <TableCell align="right">Manager</TableCell>
-                            <TableCell align="right">Performace Review Marks</TableCell>
-                            <TableCell align="right">Feedback</TableCell>
+                            <TableCell align="right">Sl No</TableCell>
+                            <TableCell align="right">Name</TableCell>
                             <TableCell align="right">Description</TableCell>
+                            <TableCell align="right">Modify Date</TableCell>
+
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.map((row) => (
+                        {employeeList.map((row, index) => (
                             <TableRow
                                 key={row.name}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
-                                <TableCell component="th" scope="row">
-                                    {row.name}
-                                </TableCell>
-                                <TableCell align="right">{row.calories}</TableCell>
-                                <TableCell align="right">{row.fat}</TableCell>
-                                <TableCell align="right">{row.carbs}</TableCell>
-                                <TableCell align="right">{row.protein}</TableCell>
+                                <TableCell align="right">{index}</TableCell>
+                                <TableCell align="right">Xebia</TableCell>
+                                <TableCell align="right">{row.description}</TableCell>
+                                <TableCell align="right">{newDate}</TableCell>
+
                             </TableRow>
                         ))}
                     </TableBody>
@@ -67,3 +100,13 @@ export default function EmployeeView() {
         </div>
     );
 }
+
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated,
+});
+
+const mapDispatchToProps = {
+    setAuthStatus
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(EmployeeView));
