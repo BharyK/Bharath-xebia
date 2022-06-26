@@ -1,11 +1,9 @@
 import axios from 'axios';
 
-const API_BASE = 'https://motolinc.seomantras.in/api/';
+const API_BASE = 'https://dummy.restapiexample.com/api/';
 
 const headers = {
   'Content-Type': 'application/json',
-  'Ocp-Apim-Subscription-Key': 'ee133dc58c6d47c5a32cdaea7490820c',
-  'Ocp-Apim-Trace': true,
 };
 
 export async function getRequest(path, params) {
@@ -13,8 +11,8 @@ export async function getRequest(path, params) {
   return res;
 }
 
-export async function postRequest(path, body) {
-  const res = await axios.post(API_BASE + path, body, { headers });
+export async function postRequest(path, params) {
+  const res = await axios.post(API_BASE + path, { headers, params });
   return res;
 }
 

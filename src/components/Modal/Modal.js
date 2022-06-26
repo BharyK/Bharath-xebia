@@ -18,7 +18,21 @@ const style = {
     p: 4,
 };
 
-export default function BasicModal({ handleModalClose, modalShow, modalText }) {
+
+
+export default function BasicModal({ handleAddEmpolyee, deleteEmployeeId, handleDeleteEmployee, handleModalClose, modalShow, modalText }) {
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        console.log("name value", data.get('eName'))
+        const empDetails = (
+            data.get('eName'),
+            data.get('eId'),
+            data.get('eSalary'),
+            data.get('eAge')
+        )
+        handleAddEmpolyee(empDetails)
+    };
     return (
         <div>
             <Modal
@@ -27,60 +41,96 @@ export default function BasicModal({ handleModalClose, modalShow, modalText }) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={style}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2" style = {{textAlign: "center"}}>
+                <Box component="form"
+                    noValidate
+                    autoComplete="off"
+                    sx={style}
+                    onSubmit={handleSubmit}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2" style={{ textAlign: "center" }}>
                         Employee {modalText}
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        {modalText === "Delete" && "Are you sure, you want delete this employee details"}
-                        <div style={{ margin: "auto", width: "87%" }}>
-                            <TextField
-                                required
-                                id="outlined-required"
-                                label="Employee Name"
-                                placeholder='Employee Name'
-                                style={{ marginTop: 20, marginBottom: 20, width: 350 }}
-                            />
-                            <TextField
-                                required
-                                id="outlined-required"
-                                label="Employee Id"
-                                placeholder="Employee Id"
-                                style={{ marginBottom: 20, width: 350 }}
-                                disabled
-                            />
-                            <TextField
-                                required
-                                id="outlined-required"
-                                label="Employee performance review"
-                                placeholder="Employee performance review"
-                                style={{ marginBottom: 20, width: 350 }}
-                            />
-                            <TextField
-                                required
-                                id="outlined-required"
-                                label="Employee Feedback"
-                                placeholder="Employee Feedback"
-                                style={{ marginBottom: 20, width: 350 }}
-                            />
-                            <TextField
-                                required
-                                id="outlined-required"
-                                label="Employee Description"
-                                placeholder="Employee Description"
-                                style={{ marginBottom: 20, width: 350 }}
-                            />
-                            <Grid container style = {{margin: "auto", width: "50%"}}>
-                                <Grid item xs={4} style = {{marginRight: 40}}>
-                                <Button variant="contained">{modalText}</Button>
+                        {modalText === "Delete" ? <div>
+                            <h4>Are you sure you want delete the employee</h4>
+                            <Grid container style={{ margin: "auto", width: "50%" }}>
+                                <Grid item xs={4} style={{ marginRight: 40 }}>
+                                    <Button variant="contained"
+                                        onClick={() => handleDeleteEmployee(deleteEmployeeId)}
+                                    >{modalText}</Button>
                                 </Grid>
                                 <Grid item xs={4}>
                                     <Button variant="outlined" color="error"
-                                    onClick={handleModalClose}
+                                        onClick={handleModalClose}
                                     >Cancel</Button>
                                 </Grid>
                             </Grid>
                         </div>
+                            : <div style={{ margin: "auto", width: "87%" }}>
+                                <TextField
+                                    name="eName"
+                                    required
+                                    id="outlined-required"
+                                    label="Employee Name"
+                                    autoFocus
+                                    // placeholder='Employee Name'
+                                    style={{ marginTop: 20, marginBottom: 20, width: 350 }}
+                                    value={modalText === "Edit" ? deleteEmployeeId.employee_name : null}
+                                />
+                                <TextField
+                                    name="eId"
+                                    required
+                                    id="outlined-required"
+                                    label="Employee Id"
+                                    //placeholder="Employee Id"
+                                    style={{ marginBottom: 20, width: 350 }}
+                                    disabled
+                                    value={modalText === "Edit" ? deleteEmployeeId.id : null}
+                                />
+                                <TextField
+                                    name="eSalary"
+                                    required
+                                    id="outlined-required"
+                                    label="Employee salary"
+                                    // placeholder="Employee salary"
+                                    style={{ marginBottom: 20, width: 350 }}
+                                    value={modalText === "Edit" ? deleteEmployeeId.employee_salary : null}
+                                />
+                                <TextField
+                                    name="eAge"
+                                    required
+                                    id="outlined-required"
+                                    label="Employee Age"
+                                    // placeholder="Employee Age"
+                                    style={{ marginBottom: 20, width: 350 }}
+                                    value={modalText === "Edit" ? deleteEmployeeId.employee_age : null}
+                                />
+                                <TextField
+                                    required
+                                    id="outlined-required"
+                                    label="Employee Description"
+                                    // placeholder="Employee Description"
+                                    style={{ marginBottom: 20, width: 350 }}
+                                />
+                                <Grid container style={{ margin: "auto", width: "50%" }}>
+                                    {modalText === "Add" ? <Grid item xs={4} style={{ marginRight: 40 }}>
+                                        <Button variant="contained"
+                                            //  onClick={ handleSubmit}
+                                            type="submit"
+                                        >{modalText}</Button>
+                                    </Grid> : <Grid item xs={4} style={{ marginRight: 40 }}>
+                                        <Button variant="contained"
+                                            onClick={handleModalClose}
+                                        >{modalText}</Button>
+                                    </Grid>}
+
+                                    <Grid item xs={4}>
+                                        <Button variant="outlined" color="error"
+                                            onClick={handleModalClose}
+                                        >Cancel</Button>
+                                    </Grid>
+                                </Grid>
+                            </div>
+                        }
                     </Typography>
                 </Box>
             </Modal>

@@ -13,16 +13,18 @@ import createStore from './store';
 
 //TODO:: Import Reduces
 import authReducer from './reducers/Auth';
+import employeeDataReducer from './reducers/EmployeeData'
 
 //TODO:: Import Sagas
-import authSagas from './sagas/Auth'
+import employeeData from './sagas/EmployeeData'
 
 const reducer = {
-  auth: authReducer
+  auth: authReducer,
+  employee: employeeDataReducer,
 };
 
 const sagas = [
-  fork(authSagas)
+  fork(employeeData)
 ]
 
 
@@ -32,7 +34,7 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={createStore(reducer, sagas, browserHistory)}>
       <Router history={browserHistory}>
-        <App location={browserHistory.location} Routes={RoutesComponent} />
+        <App location={browserHistory.location} history={browserHistory} Routes={RoutesComponent} />
       </Router>
     </Provider>
   </React.StrictMode>,

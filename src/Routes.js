@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Route, Routes, useRoutes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import loadable from 'react-loadable';
 import Spinner from './components/Spinner/Spinner';
 
@@ -8,18 +8,16 @@ const load = loader => loadable({
 })
 
 
-const LandingPage = load(() =>
-    import('./container/LandingPage/LandingPage')
-);
-const SignInPage = load(() =>
-import('./container/SignIn/SignIn')
-);
+const AdminViewPage = load(() => import ('./container/AdminView/AdminView'));
+const EmployeeViewPage=load(() => import('./container/EmployeeView/EmployeeView'));
+const SignInPage = load(() =>import('./container/SignIn/SignIn'));
 
 const RoutesComponent = () => {
     return (
         <Routes>
-            <Route exact element={<LandingPage/>} path="/" />
-            <Route exact element={<SignInPage/>} path="/signIn" />
+            <Route  element={<AdminViewPage/>} path="/adminView" />
+            <Route  element={<EmployeeViewPage/>} path="/employeeViewPage" />
+            <Route exact element={<SignInPage/>} path="/" />
         </Routes>
     )
 }

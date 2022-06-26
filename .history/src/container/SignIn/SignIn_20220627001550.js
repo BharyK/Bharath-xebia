@@ -99,7 +99,7 @@ function SignIn({isAuthenticated, setAuthStatus}) {
           </Box>
         </Box>
         <h4>Admin Portal: userName: Admin, password: 123</h4>
-        <h4>Employee Portal: userName: Xebia, password: 123</h4>
+      <h4>Employee Portal: userName: Xebia, password: 123</h4>
       </Container>
       
     </ThemeProvider>
